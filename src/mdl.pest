@@ -1,2 +1,41 @@
 WHITESPACE = _{("\t" | "\n" | " ")+}
 COMMENT = _{("//" ~ (!NEWLINE ~ ANY)* ~ NEWLINE) | ("/*" ~ (!"*/" ~ ANY)+ ~ "*/")}
+LIGHT = {"light"}
+CONSTANTS = {"constants"}
+SAVE_COORDS = {"save_coord_system"}
+CAMERA = {"camera"}
+AMBIENT = {"ambient"}
+
+TORUS = {"torus"}
+SPHERE = {"sphere"}
+BOX = {"box"}
+LINE = {"line"}
+MESH = {"mesh"}
+TEXTURE = {"texture"}
+
+SET = {"set"}
+MOVE = {"move"}
+SCALE = {"scale"}
+ROTATE = {"rotate"}
+BASENAME = {"basename"}
+SAVE_KNOBS = {"save_knobs"}
+TWEEN = {"tween"}
+FRAMES = {"frames"}
+VARY = {"vary"}
+
+PUSH = {"push"}
+POP = {"pop"}
+SAVE = {"save"}
+GENERATE_RAYFILES = {"generate_rayfiles"}
+
+SHADING = {"shading"}
+
+SHADING_TYPE = {"phong"|"flat"|"gouraud"|"raytrace"|"wireframe"}
+
+SETKNOBS = {"setknobs"}
+FOCAL = {"focal"}
+DISPLAY = {"display"}
+WEB = {"web"}
+CO = {":"}
+
+STRING = {ASCII_ALPHA ~ ("." ASCII_ALPHANUMERIC | "_")*}
