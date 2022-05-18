@@ -1,9 +1,18 @@
 WHITESPACE = _{("\t" | "\n" | " ")+}
 COMMENT = _{("//" ~ (!NEWLINE ~ ANY)* ~ NEWLINE) | ("/*" ~ (!"*/" ~ ANY)+ ~ "*/")}
 LIGHT = {"light"}
+LIGHT_SDDDDDD = {LIGHT ~ STRING ~ DOUBLE{6}}
+
 CONSTANTS = {"constants"}
+CONSTANTS_SDDDDDDDDD = {CONSTANTS ~ STRING ~ DOUBLE{9}}
+CONSTANTS_SDDDDDDDDDDDD = {CONSTANTS ~ STRING ~ DOUBLE{12}}
+
 SAVE_COORDS = {"save_coord_system"}
+SAVE_COORDS_S = {SAVE_COORDS ~ STRING}
+
 CAMERA = {"camera"}
+CAMERA_DDDDDD = {CAMERA ~ DOUBLE{6}}
+
 AMBIENT = {"ambient"}
 
 TORUS = {"torus"}
@@ -35,12 +44,25 @@ LINE_SDDDDDDS = {LINE ~ STRING ~ DOUBLE ~ DOUBLE ~ DOUBLE ~ DOUBLE ~ DOUBLE ~ DO
 LINE_SDDDSDDDS = {LINE ~ STRING ~ DOUBLE{3} ~ STRING ~ DOUBLE{3} ~ STRING}
 
 MESH = {"mesh"}
+MESH_CS = {MESH ~ CO ~ STRING}
+MESH_SCS = {MESH ~ STRING ~ CO ~ STRING}
+MESH_SCSS = {MESH ~ STRING ~ CO ~ STRING{2}}
+
 TEXTURE = {"texture"}
 
 SET = {"set"}
 MOVE = {"move"}
+MOVE_DDDS = {MOVE ~ DOUBLE{3} ~ STRING}
+MOVE_DDD = {MOVE ~ DOUBLE{3}}
+
 SCALE = {"scale"}
+SCALE_DDDS = {SCALE ~ DOUBLE{3} ~ STRING}
+SCALE_DDD = {SCALE ~ DOUBLE{3}}
+
 ROTATE = {"rotate"}
+ROTATE_SD = {ROTATE ~ STRING ~ DOUBLE}
+ROTATE_SDS = {ROTATE ~ STRING ~ DOUBLE ~ STRING}
+
 BASENAME = {"basename"}
 SAVE_KNOBS = {"save_knobs"}
 TWEEN = {"tween"}
@@ -50,6 +72,8 @@ VARY = {"vary"}
 PUSH = {"push"}
 POP = {"pop"}
 SAVE = {"save"}
+SAVE_S = {SAVE ~ STRING}
+
 GENERATE_RAYFILES = {"generate_rayfiles"}
 
 SHADING = {"shading"}
