@@ -1,8 +1,9 @@
 WHITESPACE = _{("\t" | "\n" | " ")+}
 COMMENT = _{("//" ~ (!NEWLINE ~ ANY)* ~ NEWLINE) | ("/*" ~ (!"*/" ~ ANY)+ ~ "*/")}
 CO = {":"}
-STRING = {ASCII_ALPHA ~ ("." ASCII_ALPHANUMERIC | "_")*}
+STRING = {ASCII_ALPHA ~ ("." | ASCII_ALPHANUMERIC | "_")*}
 SHADING_TYPE = {"phong"|"flat"|"gouraud"|"raytrace"|"wireframe"}
+DOUBLE = @{("-"? ~ ASCII_DIGIT+ ~ "." ~ ASCII_DIGIT+) | ("-"? ~ ASCII_DIGIT+ ~ ".") | ("-"? ~ ASCII_DIGIT+) | ("-"? ~ "." ~ ASCII_DIGIT+)}
 
 LIGHT = {"light"}
 LIGHT_SDDDDDD = {LIGHT ~ STRING ~ DOUBLE{6}}
