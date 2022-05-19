@@ -1,7 +1,7 @@
 WHITESPACE = _{("\t" | "\n" | " ")+}
 COMMENT = _{("//" ~ (!NEWLINE ~ ANY)* ~ NEWLINE) | ("/*" ~ (!"*/" ~ ANY)+ ~ "*/")}
 CO = {":"}
-STRING = {ASCII_ALPHA ~ ("." | ASCII_ALPHANUMERIC | "_")*}
+STRING = @{ASCII_ALPHA ~ ("." | ASCII_ALPHANUMERIC | "_")*}
 SHADING_TYPE = {"phong"|"flat"|"gouraud"|"raytrace"|"wireframe"}
 DOUBLE = @{("-"? ~ ASCII_DIGIT+ ~ "." ~ ASCII_DIGIT+) | ("-"? ~ ASCII_DIGIT+ ~ ".") | ("-"? ~ ASCII_DIGIT+) | ("-"? ~ "." ~ ASCII_DIGIT+)}
 
@@ -87,8 +87,8 @@ FRAMES_D = {FRAMES ~ DOUBLE}
 VARY = {"vary"}
 VARY_SDDDD = {VARY ~ STRING ~ DOUBLE{4}}
 
-PUSH = {"push"}
-POP = {"pop"}
+PPUSH = {"push"}
+PPOP = {"pop"}
 
 SAVE = {"save"}
 SAVE_S = {SAVE ~ STRING}
