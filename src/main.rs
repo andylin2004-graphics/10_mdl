@@ -1,33 +1,36 @@
+mod color;
+mod draw;
+mod gmath;
+mod image;
+mod matrix;
+mod parser;
+mod reflect;
+use color::Color;
+use image::Image;
+use matrix::CurveType;
+use matrix::Matrix;
+use parser::parse;
+use reflect::ReflectionValue;
+
 extern crate pest;
 #[macro_use]
 extern crate pest_derive;
 
-use std::io::{BufRead, Read};
-use std::io::{self, BufReader};
-use std::fs::File;
-use crate::pest::{Parser, iterators::Pair};
-use std::fs;
+pub mod consts{
+    use crate::color::Color;
+    use crate::reflect::ReflectionValue; 
 
-#[derive(Parser)]
-#[grammar = "mdl.pest"]
-struct MDLParser;
+    pub const AMBIENT_COLOR: Color = Color::new_color(50, 50, 50);
+    pub const AMBIENT_REFLECT: ReflectionValue = ReflectionValue::new_values(0.1, 0.1, 0.1);
+    pub const DIRECT_REFLECT: ReflectionValue = ReflectionValue::new_values(0.5, 0.5, 0.5);
+    pub const SPECULAR_REFLECT: ReflectionValue = ReflectionValue::new_values(0.5, 0.5, 0.5);
+    pub const POINT_LIGHT_LOCATION: [f32; 3] = [0.5, 0.75, 1.0];
+    pub const POINT_LIGHT_COLOR: Color = Color::new_color(0, 255, 255);
+    pub const VIEW: [f32; 3] = [0.0,0.0,1.0];
+    pub const STEP_2D: i32 = 100;
+    pub const STEP_3D: i32 = 100;
+}
 
-fn main() -> io::Result<()>{
-    // let file = File::open(&fname)?;
-    let file = File::open("test.mdl")?;
-    let mut reader = BufReader::new(file);
-    let mut instructions = String::new();
-    reader.read_to_string(&mut instructions);
-    // println!("{}", instructions);
-    // for line in reader.lines(){
-    let commands = MDLParser::parse(Rule::IDENT_LIST, &instructions);
-    // println!("{:?}", commands);
-    for pair in commands{
-        for command in pair{
-            match command.as_rule(){
-                // Rule::
-            }
-        }
-    }
-    Ok(())
+fn main() {
+    parse("face.mdl");
 }
