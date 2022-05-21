@@ -1,23 +1,33 @@
-use std::env;
+extern crate pest;
+#[macro_use]
+extern crate pest_derive;
 
-use lrlex::lrlex_mod;
-use lrpar::lrpar_mod;
+use std::io::{BufRead, Read};
+use std::io::{self, BufReader};
+use std::fs::File;
+use crate::pest::{Parser, iterators::Pair};
+use std::fs;
 
-//tell lexer which lex file to use
-lrlex_mod!("mdl.l");
-//tell parser which parser to use
-lrpar_mod!("mdl.y");
+#[derive(Parser)]
+#[grammar = "mdl.pest"]
+struct MDLParser;
 
-fn main() {
-    let lexerdef = mdl_l::lexerdef();
-    let args: Vec<String> = env::args().collect();
-    let lexer = lexerdef.lexer(&args[1]);
-    let (res, errs) = mdl_y::parse(&lexer);
-    for e in errs{
-        println!("{}", e.pp(&lexer, &mdl_y::token_epp));
+fn main() -> io::Result<()>{
+    // let file = File::open(&fname)?;
+    let file = File::open("test.mdl")?;
+    let mut reader = BufReader::new(file);
+    let mut instructions = String::new();
+    reader.read_to_string(&mut instructions);
+    // println!("{}", instructions);
+    // for line in reader.lines(){
+    let commands = MDLParser::parse(Rule::IDENT_LIST, &instructions);
+    // println!("{:?}", commands);
+    for pair in commands{
+        for command in pair{
+            match command.as_rule(){
+                // Rule::
+            }
+        }
     }
-    match res{
-        Some(r) => println!("Result: {:?}", r),
-        _ => eprintln!("Unable to evaluate expression.")
-    }
+    Ok(())
 }
