@@ -1,9 +1,16 @@
-WHITESPACE = _{("\t" | "\n" | " ")+}
-COMMENT = _{("//" ~ (!NEWLINE ~ ANY)* ~ NEWLINE) | ("/*" ~ (!"*/" ~ ANY)+ ~ "*/")}
+WHITESPACE = _{("\t" |
+" ")+}
+COMMENT = _{("//" ~ (!NEWLINE ~ ANY)* ~ NEWLINE) |
+("/*" ~ (!"*/" ~ ANY)+ ~ "*/")}
 CO = {":"}
-STRING = @{ASCII_ALPHA ~ ("." | ASCII_ALPHANUMERIC | "_")*}
+STRING = @{ASCII_ALPHA ~ ("." |
+ASCII_ALPHANUMERIC |
+"_")*}
 SHADING_TYPE = {"phong"|"flat"|"gouraud"|"raytrace"|"wireframe"}
-DOUBLE = @{("-"? ~ ASCII_DIGIT+ ~ "." ~ ASCII_DIGIT+) | ("-"? ~ ASCII_DIGIT+ ~ ".") | ("-"? ~ ASCII_DIGIT+) | ("-"? ~ "." ~ ASCII_DIGIT+)}
+DOUBLE = @{("-"? ~ ASCII_DIGIT+ ~ "." ~ ASCII_DIGIT+) |
+("-"? ~ ASCII_DIGIT+ ~ ".") |
+("-"? ~ ASCII_DIGIT+) |
+("-"? ~ "." ~ ASCII_DIGIT+)}
 
 LIGHT = {"light"}
 LIGHT_SDDDDDD = {LIGHT ~ STRING ~ DOUBLE{6}}
@@ -22,10 +29,11 @@ AMBIENT = {"ambient"}
 AMBIENT_DDD = {AMBIENT ~ DOUBLE{3}}
 
 TORUS = {"torus"}
-TORUS_DDDDD = {TORUS ~ DOUBLE ~ DOUBLE ~ DOUBLE ~ DOUBLE ~ DOUBLE}
-TORUS_DDDDDS = {TORUS ~ DOUBLE ~ DOUBLE ~ DOUBLE ~ DOUBLE ~ DOUBLE ~ STRING}
-TORUS_SDDDDD = {TORUS ~ STRING ~ DOUBLE ~ DOUBLE ~ DOUBLE ~ DOUBLE ~ DOUBLE}
-TORUS_SDDDDDS = {TORUS ~ STRING ~ DOUBLE ~ DOUBLE ~ DOUBLE ~ DOUBLE ~ DOUBLE ~ STRING}
+TORUS_DDDDD = {TORUS ~ DOUBLE{5}}
+TORUS_DDDDDS = {TORUS ~ DOUBLE{5} ~ STRING}
+TORUS_SDDDDD = {TORUS ~ STRING ~ DOUBLE{5}}
+TORUS_SDDDDDS = {TORUS ~ STRING ~ DOUBLE{5} ~ STRING}
+// TORUS_FUNC = {TORUS ~ STRING? ~ DOUBLE{5} ~ STRING?}
 
 SPHERE = {"sphere"}
 SPHERE_DDDD = {SPHERE ~ DOUBLE ~ DOUBLE ~ DOUBLE ~ DOUBLE}
@@ -106,3 +114,57 @@ FOCAL_D = {FOCAL ~ DOUBLE}
 
 DISPLAY = {"display"}
 WEB = {"web"}
+
+IDENT_LIST = {
+    SOI ~ 
+    ((
+        LIGHT_SDDDDDD |
+        CONSTANTS_SDDDDDDDDDDDD |
+        CONSTANTS_SDDDDDDDDD |
+        SAVE_COORDS_S |
+        CAMERA_DDDDDD |
+        TORUS_SDDDDDS |
+        TORUS_DDDDDS |
+        TORUS_SDDDDD |
+        TORUS_DDDDD |
+        SPHERE_SDDDDS |
+        SPHERE_DDDDS |
+        SPHERE_SDDDD |
+        SPHERE_DDDD |
+        BOX_SDDDDDDS|
+        BOX_DDDDDDS |
+        BOX_SDDDDDD |
+        BOX_DDDDDD |
+        LINE_SDDDSDDDS |
+        LINE_SDDDSDDD |
+        LINE_SDDDDDDS |
+        LINE_SDDDDDD |
+        LINE_DDDSDDDS |
+        LINE_DDDDDDS |
+        LINE_DDDSDDD |
+        LINE_DDDDDD |
+        MESH_SCSS |
+        MESH_SCS |
+        MESH_CS |
+        TEXTURE_SDDDDDDDDDDDD |
+        SET_SD |
+        MOVE_DDDS |
+        MOVE_DDD |
+        PPUSH |
+        PPOP |
+        TWEEN_DDSS |
+        BASENAME_S |
+        SAVE_KNOBS_S |
+        SCALE_DDDS |
+        SCALE_DDD |
+        ROTATE_SDS |
+        ROTATE_SD |
+        SAVE_S |
+        GENERATE_RAYFILES |
+        SHADING_ST |
+        FOCAL_D |
+        DISPLAY |
+        AMBIENT_DDD
+    ) ~ NEWLINE?)+
+    ~ EOI
+}
