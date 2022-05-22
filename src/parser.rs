@@ -310,6 +310,21 @@ pub fn parse(fname: &str) -> io::Result<()> {
                         .spawn()
                         .expect("failed to convert image to desired format");
                 }
+                Rule::LINE_DDDDDD => {
+                    let mut command_contents = command.into_inner();
+                    edges.add_edge(
+                        command_contents.next().unwrap().as_str().parse().unwrap(),
+                        command_contents.next().unwrap().as_str().parse().unwrap(),
+                        command_contents.next().unwrap().as_str().parse().unwrap(),
+                        command_contents.next().unwrap().as_str().parse().unwrap(),
+                        command_contents.next().unwrap().as_str().parse().unwrap(),
+                        command_contents.next().unwrap().as_str().parse().unwrap(),
+                    );
+                    edges.multiply_matrixes(cstack.last().unwrap());
+                    screen.draw_lines(&edges, &color);
+    
+                    edges = Matrix::new(0, 0);
+                }
                 Rule::EOI => {}
                 _ => {
                     println!("{:?}", command.as_rule());
