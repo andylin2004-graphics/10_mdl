@@ -3,6 +3,7 @@ use crate::image::Image;
 use crate::matrix::CurveType;
 use crate::matrix::Matrix;
 use crate::pest::{iterators::Pair, Parser};
+use crate::ReflectionValue;
 use std::collections::HashMap;
 use std::fs;
 use std::fs::File;
@@ -14,23 +15,40 @@ struct MDLParser;
 
 #[derive(Debug)]
 struct Constants {
-    pub r: [f32; 3],
-    pub g: [f32; 3],
-    pub b: [f32; 3],
+    pub ambient_reflect: ReflectionValue,
+    pub diffuse_reflect: ReflectionValue,
+    pub specular_reflect: ReflectionValue,
     pub red: f32,
     pub green: f32,
     pub blue: f32,
 }
 
 impl Constants {
-    fn new() -> Constants {
+    fn new(
+        ambient_red: f32,
+        diffuse_red: f32,
+        specular_red: f32,
+        ambient_green: f32,
+        diffuse_green: f32,
+        specular_green: f32,
+        ambient_blue: f32,
+        diffuse_blue: f32,
+        specular_blue: f32,
+        red: f32,
+        green: f32,
+        blue: f32,
+    ) -> Constants {
         Constants {
-            r: [0.0, 0.0, 0.0],
-            g: [0.0, 0.0, 0.0],
-            b: [0.0, 0.0, 0.0],
-            red: 0.0,
-            green: 0.0,
-            blue: 0.0,
+            ambient_reflect: ReflectionValue::new_values(ambient_red, ambient_green, ambient_blue),
+            diffuse_reflect: ReflectionValue::new_values(diffuse_red, diffuse_green, diffuse_blue),
+            specular_reflect: ReflectionValue::new_values(
+                specular_red,
+                specular_green,
+                specular_blue,
+            ),
+            red,
+            green,
+            blue
         }
     }
 }
@@ -50,56 +68,18 @@ pub fn parse(fname: &str) -> io::Result<()> {
     cstack.push(Matrix::identity());
     for pair in commands {
         for command in pair {
-            println!("{:?}", command.as_rule());
+            // println!("{:?}", command.as_rule());
             match command.as_rule() {
                 Rule::CONSTANTS_SDDDDDDDDD => {
                     let mut command_contents = command.into_inner();
                     let name = command_contents.next().unwrap().as_str();
-                    let constant = Constants {
-                        r: [
-                            command_contents.next().unwrap().as_str().parse().unwrap(),
-                            command_contents.next().unwrap().as_str().parse().unwrap(),
-                            command_contents.next().unwrap().as_str().parse().unwrap(),
-                        ],
-                        g: [
-                            command_contents.next().unwrap().as_str().parse().unwrap(),
-                            command_contents.next().unwrap().as_str().parse().unwrap(),
-                            command_contents.next().unwrap().as_str().parse().unwrap(),
-                        ],
-                        b: [
-                            command_contents.next().unwrap().as_str().parse().unwrap(),
-                            command_contents.next().unwrap().as_str().parse().unwrap(),
-                            command_contents.next().unwrap().as_str().parse().unwrap(),
-                        ],
-                        red: 0.0,
-                        green: 0.0,
-                        blue: 0.0,
-                    };
+                    let constant = Constants::new(command_contents.next().unwrap().as_str().parse().unwrap(), command_contents.next().unwrap().as_str().parse().unwrap(), command_contents.next().unwrap().as_str().parse().unwrap(), command_contents.next().unwrap().as_str().parse().unwrap(), command_contents.next().unwrap().as_str().parse().unwrap(), command_contents.next().unwrap().as_str().parse().unwrap(), command_contents.next().unwrap().as_str().parse().unwrap(), command_contents.next().unwrap().as_str().parse().unwrap(), command_contents.next().unwrap().as_str().parse().unwrap(), 0.0, 0.0, 0.0);
                     constants_store.insert(name, constant);
                 }
                 Rule::CONSTANTS_SDDDDDDDDDDDD => {
                     let mut command_contents = command.into_inner();
                     let name = command_contents.next().unwrap().as_str();
-                    let constant = Constants {
-                        r: [
-                            command_contents.next().unwrap().as_str().parse().unwrap(),
-                            command_contents.next().unwrap().as_str().parse().unwrap(),
-                            command_contents.next().unwrap().as_str().parse().unwrap(),
-                        ],
-                        g: [
-                            command_contents.next().unwrap().as_str().parse().unwrap(),
-                            command_contents.next().unwrap().as_str().parse().unwrap(),
-                            command_contents.next().unwrap().as_str().parse().unwrap(),
-                        ],
-                        b: [
-                            command_contents.next().unwrap().as_str().parse().unwrap(),
-                            command_contents.next().unwrap().as_str().parse().unwrap(),
-                            command_contents.next().unwrap().as_str().parse().unwrap(),
-                        ],
-                        red: command_contents.next().unwrap().as_str().parse().unwrap(),
-                        green: command_contents.next().unwrap().as_str().parse().unwrap(),
-                        blue: command_contents.next().unwrap().as_str().parse().unwrap(),
-                    };
+                    let constant = Constants::new(command_contents.next().unwrap().as_str().parse().unwrap(), command_contents.next().unwrap().as_str().parse().unwrap(), command_contents.next().unwrap().as_str().parse().unwrap(), command_contents.next().unwrap().as_str().parse().unwrap(), command_contents.next().unwrap().as_str().parse().unwrap(), command_contents.next().unwrap().as_str().parse().unwrap(), command_contents.next().unwrap().as_str().parse().unwrap(), command_contents.next().unwrap().as_str().parse().unwrap(), command_contents.next().unwrap().as_str().parse().unwrap(), command_contents.next().unwrap().as_str().parse().unwrap(), command_contents.next().unwrap().as_str().parse().unwrap(), command_contents.next().unwrap().as_str().parse().unwrap());
                     constants_store.insert(name, constant);
                 }
                 Rule::PPUSH => {

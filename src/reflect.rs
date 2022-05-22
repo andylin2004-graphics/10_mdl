@@ -1,6 +1,6 @@
 use std::fmt;
 
-#[derive(Copy, Clone)]
+#[derive(Copy, Clone, Debug)]
 pub struct ReflectionValue{
     pub r: f32,
     pub g: f32,
@@ -9,7 +9,7 @@ pub struct ReflectionValue{
 
 impl ReflectionValue{
     pub fn new() -> ReflectionValue{
-        ReflectionValue{r: 0.0, g:0.0, b:0.0}
+        ReflectionValue{r: 0.0, g: 0.0, b: 0.0}
     }
 
     pub const fn new_values(r: f32, g: f32, b: f32) -> ReflectionValue{
