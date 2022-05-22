@@ -1,4 +1,6 @@
+use std::process::Command;
 use crate::color::Color;
+use crate::consts;
 use crate::image::Image;
 use crate::matrix::CurveType;
 use crate::matrix::Matrix;
@@ -76,12 +78,12 @@ pub fn parse(fname: &str) -> io::Result<()> {
                     let constant = Constants::new(command_contents.next().unwrap().as_str().parse().unwrap(), command_contents.next().unwrap().as_str().parse().unwrap(), command_contents.next().unwrap().as_str().parse().unwrap(), command_contents.next().unwrap().as_str().parse().unwrap(), command_contents.next().unwrap().as_str().parse().unwrap(), command_contents.next().unwrap().as_str().parse().unwrap(), command_contents.next().unwrap().as_str().parse().unwrap(), command_contents.next().unwrap().as_str().parse().unwrap(), command_contents.next().unwrap().as_str().parse().unwrap(), 0.0, 0.0, 0.0);
                     constants_store.insert(name, constant);
                 }
-                Rule::CONSTANTS_SDDDDDDDDDDDD => {
-                    let mut command_contents = command.into_inner();
-                    let name = command_contents.next().unwrap().as_str();
-                    let constant = Constants::new(command_contents.next().unwrap().as_str().parse().unwrap(), command_contents.next().unwrap().as_str().parse().unwrap(), command_contents.next().unwrap().as_str().parse().unwrap(), command_contents.next().unwrap().as_str().parse().unwrap(), command_contents.next().unwrap().as_str().parse().unwrap(), command_contents.next().unwrap().as_str().parse().unwrap(), command_contents.next().unwrap().as_str().parse().unwrap(), command_contents.next().unwrap().as_str().parse().unwrap(), command_contents.next().unwrap().as_str().parse().unwrap(), command_contents.next().unwrap().as_str().parse().unwrap(), command_contents.next().unwrap().as_str().parse().unwrap(), command_contents.next().unwrap().as_str().parse().unwrap());
-                    constants_store.insert(name, constant);
-                }
+                // Rule::CONSTANTS_SDDDDDDDDDDDD => {
+                //     let mut command_contents = command.into_inner();
+                //     let name = command_contents.next().unwrap().as_str();
+                //     let constant = Constants::new(command_contents.next().unwrap().as_str().parse().unwrap(), command_contents.next().unwrap().as_str().parse().unwrap(), command_contents.next().unwrap().as_str().parse().unwrap(), command_contents.next().unwrap().as_str().parse().unwrap(), command_contents.next().unwrap().as_str().parse().unwrap(), command_contents.next().unwrap().as_str().parse().unwrap(), command_contents.next().unwrap().as_str().parse().unwrap(), command_contents.next().unwrap().as_str().parse().unwrap(), command_contents.next().unwrap().as_str().parse().unwrap(), command_contents.next().unwrap().as_str().parse().unwrap(), command_contents.next().unwrap().as_str().parse().unwrap(), command_contents.next().unwrap().as_str().parse().unwrap());
+                //     constants_store.insert(name, constant);
+                // }
                 Rule::PPUSH => {
                     cstack.push(cstack.last().unwrap().clone());
                 }
@@ -141,6 +143,174 @@ pub fn parse(fname: &str) -> io::Result<()> {
                     scale.multiply_matrixes(&cstack.pop().unwrap());
                     cstack.push(scale);
                 }
+                Rule::SPHERE_SDDDD => {
+                    // println!("{:?}", command);
+                    let mut command_contents = command.into_inner();
+                    let lighting_constants = constants_store.get(command_contents.next().unwrap().as_str()).unwrap();
+                    polygons.add_sphere(
+                        command_contents.next().unwrap().as_str().parse().unwrap(),
+                        command_contents.next().unwrap().as_str().parse().unwrap(),
+                        command_contents.next().unwrap().as_str().parse().unwrap(),
+                        command_contents.next().unwrap().as_str().parse().unwrap(),
+                        consts::STEP_3D,
+                    );
+                    polygons.multiply_matrixes(cstack.last().unwrap());
+                    screen.draw_polygons(
+                        &polygons,
+                        &color,
+                        &mut consts::VIEW.to_vec(),
+                        &consts::AMBIENT_COLOR,
+                        &mut consts::POINT_LIGHT_LOCATION.to_vec(),
+                        &consts::POINT_LIGHT_COLOR,
+                        &lighting_constants.ambient_reflect,
+                        &lighting_constants.diffuse_reflect,
+                        &lighting_constants.specular_reflect
+                    );
+
+                    polygons = Matrix::new(0, 0);
+                }
+                Rule::SPHERE_DDDD => {
+                    let mut command_contents = command.into_inner();
+                    polygons.add_sphere(
+                        command_contents.next().unwrap().as_str().parse().unwrap(),
+                        command_contents.next().unwrap().as_str().parse().unwrap(),
+                        command_contents.next().unwrap().as_str().parse().unwrap(),
+                        command_contents.next().unwrap().as_str().parse().unwrap(),
+                        consts::STEP_3D,
+                    );
+                    polygons.multiply_matrixes(cstack.last().unwrap());
+                    screen.draw_polygons(
+                        &polygons,
+                        &color,
+                        &mut consts::VIEW.to_vec(),
+                        &consts::AMBIENT_COLOR,
+                        &mut consts::POINT_LIGHT_LOCATION.to_vec(),
+                        &consts::POINT_LIGHT_COLOR,
+                        &consts::AMBIENT_REFLECT,
+                        &consts::DIFFUSE_REFLECT,
+                        &consts::SPECULAR_REFLECT
+                    );
+
+                    polygons = Matrix::new(0, 0);
+                }
+                Rule::BOX_SDDDDDD => {
+                    let mut command_contents = command.into_inner();
+                    let lighting_constants = constants_store.get(command_contents.next().unwrap().as_str()).unwrap();
+                    polygons.add_box(
+                        command_contents.next().unwrap().as_str().parse().unwrap(),
+                        command_contents.next().unwrap().as_str().parse().unwrap(),
+                        command_contents.next().unwrap().as_str().parse().unwrap(),
+                        command_contents.next().unwrap().as_str().parse().unwrap(),
+                        command_contents.next().unwrap().as_str().parse().unwrap(),
+                        command_contents.next().unwrap().as_str().parse().unwrap()
+                    );
+                    polygons.multiply_matrixes(cstack.last().unwrap());
+
+                    screen.draw_polygons(
+                        &polygons,
+                        &color,
+                        &mut consts::VIEW.to_vec(),
+                        &consts::AMBIENT_COLOR,
+                        &mut consts::POINT_LIGHT_LOCATION.to_vec(),
+                        &consts::POINT_LIGHT_COLOR,
+                        &lighting_constants.ambient_reflect,
+                        &lighting_constants.diffuse_reflect,
+                        &lighting_constants.specular_reflect
+                    );
+
+                    polygons = Matrix::new(0, 0);
+                }
+                Rule::BOX_DDDDDD => {
+                    let mut command_contents = command.into_inner();
+                    polygons.add_box(
+                        command_contents.next().unwrap().as_str().parse().unwrap(),
+                        command_contents.next().unwrap().as_str().parse().unwrap(),
+                        command_contents.next().unwrap().as_str().parse().unwrap(),
+                        command_contents.next().unwrap().as_str().parse().unwrap(),
+                        command_contents.next().unwrap().as_str().parse().unwrap(),
+                        command_contents.next().unwrap().as_str().parse().unwrap()
+                    );
+                    polygons.multiply_matrixes(cstack.last().unwrap());
+                    screen.draw_polygons(
+                        &polygons,
+                        &color,
+                        &mut consts::VIEW.to_vec(),
+                        &consts::AMBIENT_COLOR,
+                        &mut consts::POINT_LIGHT_LOCATION.to_vec(),
+                        &consts::POINT_LIGHT_COLOR,
+                        &consts::AMBIENT_REFLECT,
+                        &consts::DIFFUSE_REFLECT,
+                        &consts::SPECULAR_REFLECT
+                    );
+
+                    polygons = Matrix::new(0, 0);
+                }
+                Rule::TORUS_SDDDDD => {
+                    let mut command_contents = command.into_inner();
+                    let lighting_constants = constants_store.get(command_contents.next().unwrap().as_str()).unwrap();
+                    polygons.add_torus(
+                        command_contents.next().unwrap().as_str().parse().unwrap(),
+                        command_contents.next().unwrap().as_str().parse().unwrap(),
+                        command_contents.next().unwrap().as_str().parse().unwrap(),
+                        command_contents.next().unwrap().as_str().parse().unwrap(),
+                        command_contents.next().unwrap().as_str().parse().unwrap(),
+                        consts::STEP_3D
+                    );
+                    polygons.multiply_matrixes(cstack.last().unwrap());
+                    screen.draw_polygons(
+                        &polygons,
+                        &color,
+                        &mut consts::VIEW.to_vec(),
+                        &consts::AMBIENT_COLOR,
+                        &mut consts::POINT_LIGHT_LOCATION.to_vec(),
+                        &consts::POINT_LIGHT_COLOR,
+                        &lighting_constants.ambient_reflect,
+                        &lighting_constants.diffuse_reflect,
+                        &lighting_constants.specular_reflect
+                    );
+
+                    polygons = Matrix::new(0, 0);
+                }
+                Rule::TORUS_DDDDD => {
+                    let mut command_contents = command.into_inner();
+                    polygons.add_torus(
+                        command_contents.next().unwrap().as_str().parse().unwrap(),
+                        command_contents.next().unwrap().as_str().parse().unwrap(),
+                        command_contents.next().unwrap().as_str().parse().unwrap(),
+                        command_contents.next().unwrap().as_str().parse().unwrap(),
+                        command_contents.next().unwrap().as_str().parse().unwrap(),
+                        consts::STEP_3D
+                    );
+                    polygons.multiply_matrixes(cstack.last().unwrap());
+                    screen.draw_polygons(
+                        &polygons,
+                        &color,
+                        &mut consts::VIEW.to_vec(),
+                        &consts::AMBIENT_COLOR,
+                        &mut consts::POINT_LIGHT_LOCATION.to_vec(),
+                        &consts::POINT_LIGHT_COLOR,
+                        &consts::AMBIENT_REFLECT,
+                        &consts::DIFFUSE_REFLECT,
+                        &consts::SPECULAR_REFLECT
+                    );
+
+                    polygons = Matrix::new(0, 0);
+                }
+                Rule::DISPLAY => {
+                    screen.display();
+                }
+                Rule::SAVE_S => {
+                    let mut command_contents = command.into_inner();
+                    let filename = command_contents.next().unwrap().as_str();
+                    screen.create_file(filename);
+                    Command::new("magick")
+                        .arg("convert")
+                        .arg(filename)
+                        .arg(filename)
+                        .spawn()
+                        .expect("failed to convert image to desired format");
+                }
+                Rule::EOI => {}
                 _ => {
                     println!("{:?}", command.as_rule());
                 }
