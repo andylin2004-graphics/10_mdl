@@ -22,7 +22,7 @@ pub mod consts{
 
     pub const AMBIENT_COLOR: Color = Color::new_color(50, 50, 50);
     pub const AMBIENT_REFLECT: ReflectionValue = ReflectionValue::new_values(0.1, 0.1, 0.1);
-    pub const DIRECT_REFLECT: ReflectionValue = ReflectionValue::new_values(0.5, 0.5, 0.5);
+    pub const DIFFUSE_REFLECT: ReflectionValue = ReflectionValue::new_values(0.5, 0.5, 0.5);
     pub const SPECULAR_REFLECT: ReflectionValue = ReflectionValue::new_values(0.5, 0.5, 0.5);
     pub const POINT_LIGHT_LOCATION: [f32; 3] = [0.5, 0.75, 1.0];
     pub const POINT_LIGHT_COLOR: Color = Color::new_color(0, 255, 255);
