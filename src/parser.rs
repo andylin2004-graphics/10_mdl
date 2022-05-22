@@ -47,6 +47,7 @@ pub fn parse(fname: &str) -> io::Result<()> {
     let mut polygons = Matrix::new(0, 0);
     let mut cstack = vec![Matrix::new(0, 0); 0];
     let mut constants_store = HashMap::new();
+    cstack.push(Matrix::identity());
     for pair in commands {
         for command in pair {
             println!("{:?}", command.as_rule());
@@ -107,7 +108,62 @@ pub fn parse(fname: &str) -> io::Result<()> {
                 Rule::PPOP => {
                     cstack.pop();
                 }
-                _ => {}
+                Rule::MOVE_DDD => {
+                    let mut command_contents = command.into_inner();
+                    let mut rot = Matrix::make_translate(
+                        command_contents.next().unwrap().as_str().parse().unwrap(),
+                        command_contents.next().unwrap().as_str().parse().unwrap(),
+                        command_contents.next().unwrap().as_str().parse().unwrap(),
+                    );
+                    rot.multiply_matrixes(&cstack.pop().unwrap());
+                    cstack.push(rot);
+                }
+                Rule::ROTATE_SD => {
+                    let mut command_contents = command.into_inner();
+                    let rot_axis = command_contents.next().unwrap().as_str();
+                    match rot_axis {
+                        "x" => {
+                            let mut rot = Matrix::make_rot_x(
+                                command_contents.next().unwrap().as_str().parse().unwrap(),
+                            );
+                            rot.multiply_matrixes(&cstack.pop().unwrap());
+                            cstack.push(rot);
+                        }
+                        "y" => {
+                            let mut rot = Matrix::make_rot_y(
+                                command_contents.next().unwrap().as_str().parse().unwrap(),
+                            );
+                            rot.multiply_matrixes(&cstack.pop().unwrap());
+                            cstack.push(rot);
+                        }
+                        "z" => {
+                            let mut rot = Matrix::make_rot_z(
+                                command_contents.next().unwrap().as_str().parse().unwrap(),
+                            );
+                            rot.multiply_matrixes(&cstack.pop().unwrap());
+                            cstack.push(rot);
+                        }
+                        _ => {
+                            panic!(
+                                "Invalid input {} at 0 for rotation: please use x, y, or z.",
+                                rot_axis
+                            );
+                        }
+                    }
+                }
+                Rule::SCALE_DDD => {
+                    let mut command_contents = command.into_inner();
+                    let mut scale = Matrix::make_scale(
+                        command_contents.next().unwrap().as_str().parse().unwrap(),
+                        command_contents.next().unwrap().as_str().parse().unwrap(),
+                        command_contents.next().unwrap().as_str().parse().unwrap(),
+                    );
+                    scale.multiply_matrixes(&cstack.pop().unwrap());
+                    cstack.push(scale);
+                }
+                _ => {
+                    println!("{:?}", command.as_rule());
+                }
             }
         }
     }
