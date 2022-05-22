@@ -54,7 +54,6 @@ pub fn parse(fname: &str) -> io::Result<()> {
                 Rule::CONSTANTS_SDDDDDDDDD => {
                     let mut command_contents = command.into_inner();
                     let name = command_contents.next().unwrap().as_str();
-                    println!("{:?}", command_contents);
                     let constant = Constants {
                         r: [
                             command_contents.next().unwrap().as_str().parse().unwrap(),
@@ -76,11 +75,36 @@ pub fn parse(fname: &str) -> io::Result<()> {
                         blue: 0.0,
                     };
                     constants_store.insert(name, constant);
-                    // println!("{:?}", constant);
+                }
+                Rule::CONSTANTS_SDDDDDDDDDDDD => {
+                    let mut command_contents = command.into_inner();
+                    let name = command_contents.next().unwrap().as_str();
+                    let constant = Constants {
+                        r: [
+                            command_contents.next().unwrap().as_str().parse().unwrap(),
+                            command_contents.next().unwrap().as_str().parse().unwrap(),
+                            command_contents.next().unwrap().as_str().parse().unwrap(),
+                        ],
+                        g: [
+                            command_contents.next().unwrap().as_str().parse().unwrap(),
+                            command_contents.next().unwrap().as_str().parse().unwrap(),
+                            command_contents.next().unwrap().as_str().parse().unwrap(),
+                        ],
+                        b: [
+                            command_contents.next().unwrap().as_str().parse().unwrap(),
+                            command_contents.next().unwrap().as_str().parse().unwrap(),
+                            command_contents.next().unwrap().as_str().parse().unwrap(),
+                        ],
+                        red: command_contents.next().unwrap().as_str().parse().unwrap(),
+                        green: command_contents.next().unwrap().as_str().parse().unwrap(),
+                        blue: command_contents.next().unwrap().as_str().parse().unwrap(),
+                    };
+                    constants_store.insert(name, constant);
                 }
                 _ => {}
             }
         }
     }
+    println!("{:?}", constants_store);
     Ok(())
 }
