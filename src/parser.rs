@@ -11,6 +11,15 @@ use std::io::{self, BufReader, BufRead, Read};
 #[grammar = "mdl.pest"]
 struct MDLParser;
 
+struct Constants{
+    pub r: [f32; 3],
+    pub g: [f32; 3],
+    pub b: [f32; 3],
+    pub red: f32,
+    pub green: f32,
+    pub blue: f32
+}
+
 pub fn parse(fname: &str) -> io::Result<()> {
     let file = File::open(&fname)?;
     let mut reader = BufReader::new(file);
