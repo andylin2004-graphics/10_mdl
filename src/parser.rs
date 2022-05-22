@@ -101,6 +101,12 @@ pub fn parse(fname: &str) -> io::Result<()> {
                     };
                     constants_store.insert(name, constant);
                 }
+                Rule::PPUSH => {
+                    cstack.push(cstack.last().unwrap().clone());
+                }
+                Rule::PPOP => {
+                    cstack.pop();
+                }
                 _ => {}
             }
         }
