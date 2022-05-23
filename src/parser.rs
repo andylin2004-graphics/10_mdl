@@ -327,7 +327,7 @@ pub fn parse(fname: &str) -> io::Result<()> {
                 }
                 Rule::EOI => {}
                 _ => {
-                    println!("{:?}", command.as_rule());
+                    println!("{:?} was not implemented :/", command.as_rule());
                 }
             }
         }
