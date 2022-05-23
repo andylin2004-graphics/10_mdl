@@ -1,3 +1,6 @@
+constants dull_yellow 1 0.8 0.2 0.8 0.8 0.2 0 0 0
+constants noob_blue 0 0 0 0 0 0 1 1 1
+constants noob_green 0.2 1 1 1 1 1 0 0 0
 // test box mesh
 push
 move 150 200 0
@@ -19,44 +22,44 @@ pop
 push
 move 250 250 0
 rotate y -30
-box -100 125 50 200 250 100
+box noob_blue -100 125 50 200 250 100
 // HEAD
 push
 move 0 175 0
 rotate y 90
-sphere 0 0 0 50
+sphere dull_yellow 0 0 0 50
 pop
 // LEFT ARM
 push
 move -100 125 0
 rotate x -45
-box -40 0 40 40 100 80
+box noob_blue -40 0 40 40 100 80
 // LEFT LOWER ARM
 push
 move -20 -100 0
-box -10 0 10 20 125 20
+box dull_yellow -10 0 10 20 125 20
 pop
 pop
 // RIGHT ARM
 push
 move 100 125 0
 rotate x -45
-box 0 0 40 40 100 80
+box noob_blue 0 0 40 40 100 80
 // RIGHT LOWER ARM
 push
 move 20 -100 0
 rotate x -20
-box -10 0 10 20 125 20
+box dull_yellow -10 0 10 20 125 20
 pop
 pop
 // LEFT LEG
 push
 move -100 -125 0
-box 0 0 40 50 120 80
+box noob_green 0 0 40 50 120 80
 pop
 // RIGHT LEG
 push
 move 100 -125 0
-box -50 0 40 50 120 80
+box noob_green -50 0 40 50 120 80
 display
-save robot.png
+save noob.png
