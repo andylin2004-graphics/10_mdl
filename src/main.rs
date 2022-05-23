@@ -25,7 +25,7 @@ pub mod consts{
     pub const DIFFUSE_REFLECT: ReflectionValue = ReflectionValue::new_values(0.5, 0.5, 0.5);
     pub const SPECULAR_REFLECT: ReflectionValue = ReflectionValue::new_values(0.5, 0.5, 0.5);
     pub const POINT_LIGHT_LOCATION: [f32; 3] = [0.5, 0.75, 1.0];
-    pub const POINT_LIGHT_COLOR: Color = Color::new_color(0, 255, 255);
+    pub const POINT_LIGHT_COLOR: Color = Color::new_color(255, 255, 255);
     pub const VIEW: [f32; 3] = [0.0,0.0,1.0];
     pub const STEP_2D: i32 = 100;
     pub const STEP_3D: i32 = 100;
