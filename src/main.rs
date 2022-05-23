@@ -32,5 +32,5 @@ pub mod consts{
 }
 
 fn main() {
-    parse("face.mdl");
+    parse("coloredbot.mdl");
 }
