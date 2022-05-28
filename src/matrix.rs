@@ -50,11 +50,11 @@ impl Matrix{
         println!("{}", self);
     }
     
-    pub fn make_translate(x: i32, y: i32, z: i32) -> Matrix{
+    pub fn make_translate(x: f32, y: f32, z: f32) -> Matrix{
         let mut matrix = Matrix::identity();
-        matrix.matrix_array[0][3] = x as f32;
-        matrix.matrix_array[1][3] = y as f32;
-        matrix.matrix_array[2][3] = z as f32;
+        matrix.matrix_array[0][3] = x;
+        matrix.matrix_array[1][3] = y;
+        matrix.matrix_array[2][3] = z;
         return matrix;
     }
     
